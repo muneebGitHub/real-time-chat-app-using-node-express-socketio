@@ -1,7 +1,12 @@
 var express = require("express"); // all requires 
+var app = express(); //create app
+var http=require('http').createServer(app);
+var io=require('socket.io')(http);
+
+
 var bodyParser = require("body-parser");
 
-var app = express(); //create app
+
 
 //use middle wares 
 app.use(express.static(__dirname));
@@ -26,14 +31,17 @@ app.get("/messages", (req, res) => {
 app.post("/messages", (req, res) => {
   console.log(req.body);
   messages.push(req.body);
-  console.log("server side post", messages);
+  io.emit('message',req.body);
   res.sendStatus(200);
 });
 
+//log if the connection evernt ocuurs 
 
-
+io.on('connection',(socket)=>{
+    console.log("a user has connected ");
+});
 
 //server started listen
-var server = app.listen(3301, () => {
+var server = http.listen(3301, () => {
   console.log("server is listening on", server.address().port);
 });

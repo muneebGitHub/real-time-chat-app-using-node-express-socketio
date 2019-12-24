@@ -31,10 +31,9 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+
+    <script src="/socket.io/socket.io.js"></script>
   </head>
-
-
-
 
   <body>
     <!--[if lt IE 7]>
@@ -75,13 +74,9 @@
       <div id="messages"></div>
     </div>
 
-
-
-
-
     <script>
-
-        //things to do while page loads 
+      var socket = io();
+      //things to do while page loads
       $(() => {
         $("#send").click(() => {
           var n = $("#name").val();
@@ -91,9 +86,11 @@
         getMessages();
       });
 
+      //event listner from server 
 
+      socket.on('message',addMessage);
 
-      //supportive finctions to send and recieve messages 
+      //supportive finctions to send and recieve messages
       function addMessage(message) {
         $("#messages").append(`<h4>${message.name}</h4><p>${message.body}</p>`);
       }
@@ -109,11 +106,6 @@
         console.log("post message called", message);
         $.post("http://localhost:3301/messages", message);
       }
-
-
     </script>
-
-
-
   </body>
 </html>
